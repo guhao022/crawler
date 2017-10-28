@@ -70,24 +70,32 @@ func (h *HaHaMx) Process() (bool, error) {
 		comment_text := main.Find(".joke-main-footer").Find(".btn-icon-comment").Text()
 		comment := strings.Trim(comment_text, "评论 (|)")
 
-		img_src, fond := content.Find(".joke-main-content-img").Attr("src")
+		_, fond := content.Find(".joke-main-content-img").Attr("src")
 		if fond {
-			if strings.HasSuffix(img_src, ".gif") {
-				imgUrl, err := h.SaveImage(img_src)
-				if err != nil {
-					return false, fmt.Errorf("保存图片失败，错误原因：%s...", err)
+			// 保存图片
+			/*content.Find(".joke-main-content-img").Each(func(i int, sel *goquery.Selection) {
+				img_src, fond := sel.Attr("src")
+				if fond {
+					if strings.HasSuffix(img_src, ".gif") {
+						imgUrl, err := h.SaveImage("https:"+img_src)
+						if err != nil {
+							panic("保存图片失败，错误原因：" + err.Error())
+						}
+
+						img := new(db.Image)
+						img.SourceUrl = "https:"+img_src
+						img.Path = imgUrl
+						img.ReadNum = 0
+						img.LikeNum, _ = strconv.Atoi(like)
+						img.CommentNum, _ = strconv.Atoi(comment)
+						img.CreatedAt = time.Now()
+
+						img.Store()
+					}
 				}
+			})*/
 
-				img := new(db.Image)
-				img.SourceUrl = source_url
-				img.Path = imgUrl
-				img.ReadNum = 0
-				img.LikeNum, _ = strconv.Atoi(like)
-				img.CommentNum, _ = strconv.Atoi(comment)
-				img.CreatedAt = time.Now()
-
-				img.Store()
-			}
+			return true, fmt.Errorf("图片保存成功...")
 		}
 
 		if len(text) <= 0 {

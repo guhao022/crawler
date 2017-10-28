@@ -32,7 +32,7 @@ func (i *Image) Store() error {
 		return err
 	}
 
-	err := db.Create(&Image{}).Error
+	err := db.Create(&i).Error
 
 	if err != nil {
 		logger.Warnf("写入内容表失败：%s", err)

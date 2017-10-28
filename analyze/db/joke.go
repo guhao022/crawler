@@ -38,7 +38,7 @@ func (j *Joker) Store() error {
 		return err
 	}
 
-	err := db.Create(&Joker{}).Error
+	err := db.Create(&j).Error
 
 	if err != nil {
 		logger.Warnf("写入内容表失败：%s", err)

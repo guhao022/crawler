@@ -17,6 +17,8 @@ type Crawler struct {
 //
 func (e *Crawler) Visit(ctx *gocrawl.URLContext, res *http.Response, doc *goquery.Document) (interface{}, bool) {
 
+	println("")
+
 	log.Tracf("爬取地址：%s", ctx.URL().String())
 
 	p := analyze.NewAnalyze(doc)
@@ -32,7 +34,7 @@ func (e *Crawler) Visit(ctx *gocrawl.URLContext, res *http.Response, doc *goquer
 
 	pro, usetime, err := p.Process()
 
-	if err != nil {
+	if !pro && err != nil {
 		log.Warnf("解析失败：%s", err.Error())
 		return nil, true
 	}
