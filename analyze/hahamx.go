@@ -1,20 +1,20 @@
 package analyze
 
 import (
+	"crawler/utils"
 	"fmt"
 	"io"
-	"crawler/utils"
 	"net/http"
 	"os"
 	"path"
 	"strconv"
-	"time"
 	"strings"
+	"time"
 
+	"crawler/analyze/db"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/num5/ider"
 	"github.com/num5/logger"
-	"crawler/analyze/db"
 )
 
 type HaHaMx struct {
@@ -44,7 +44,7 @@ func (h *HaHaMx) Process() (bool, error) {
 			logger.Fatalf("panic 错误：%s ", err)
 		}
 	}()
-	
+
 	doc := h.doc
 
 	host := doc.Url.Host
@@ -54,8 +54,6 @@ func (h *HaHaMx) Process() (bool, error) {
 	if host == h.host {
 
 		source_url := doc.Url.String()
-
-		var cate = "笑话"
 
 		main := doc.Find(".joke-main")
 
@@ -105,8 +103,7 @@ func (h *HaHaMx) Process() (bool, error) {
 		joke := new(db.Joker)
 		joke.SourceUrl = source_url
 		joke.Title = "哈哈mx"
-		joke.Category = cate
-		joke.Topic = topic
+		joke.Category = topic
 		joke.Content = text
 		joke.ReadNum = 0
 		joke.LikeNum, _ = strconv.Atoi(like)

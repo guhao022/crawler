@@ -11,7 +11,6 @@ type Joker struct {
 	SourceUrl   string    `json:"source_url"`  // 原网址
 	Category    string    `json:"category"`    // 类型
 	Title       string    `json:"title"`       // 标题
-	Topic       string    `json:"topic"`       // 话题
 	Content     string    `json:"content"`     // 内容
 	ReadNum     int       `json:"read_num"`    // 阅读量
 	LikeNum     int       `json:"like_num"`    // 点赞数
