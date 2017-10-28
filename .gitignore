@@ -1,0 +1,6 @@
+conf.yaml
+conf.yml
+.DS_Store
+.idea
+*.exe
+.storage
