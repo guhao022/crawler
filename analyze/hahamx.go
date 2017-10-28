@@ -38,12 +38,12 @@ func (h *HaHaMx) Prepare(doc *goquery.Document) error {
 }
 
 func (h *HaHaMx) Process() (bool, error) {
-	/*defer func() {
+	defer func() {
 
 		if err := recover(); err != nil {
 			logger.Fatalf("panic 错误：%s ", err)
 		}
-	}()*/
+	}()
 	
 	doc := h.doc
 
