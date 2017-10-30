@@ -9,27 +9,28 @@ import (
 	"github.com/num5/logger"
 )
 
-type QiuBai struct {
+type PengFu struct {
 	doc   *goquery.Document
 	name  string
 	host  string
 	start time.Time
 }
 
-func NewQiuBai() Handler {
-	return &QiuBai{
-		name:  "qiubai",
-		host:  "www.qiushibaike.com",
+func NewPengFu() Handler {
+	return &PengFu{
+		name:  "pengfu",
+		host:  "www.pengfu.com",
 		start: time.Now(),
 	}
 }
 
-func (q *QiuBai) Prepare(doc *goquery.Document) error {
-	q.doc = doc
+func (p *PengFu) Prepare(doc *goquery.Document) error {
+	p.doc = doc
 	return nil
 }
 
-func (q *QiuBai) Process() (bool, error) {
+func (p *PengFu) Process() (bool, error) {
+
 	defer func() {
 
 		if err := recover(); err != nil {
@@ -37,25 +38,23 @@ func (q *QiuBai) Process() (bool, error) {
 		}
 	}()
 
-	doc := q.doc
+	doc := p.doc
 
 	host := doc.Url.Host
 
-	if host == q.host {
+	if host == p.host {
 
 		source_url := doc.Url.String()
 
-		main := doc.Find("#content")
+		main := doc.Find(".w960").Find(".w645").Find(".list-item")
 
-		cate := main.Find(".source-column").Text()
+		content := main.Find(".content-txt").Text()
 
-		block := main.Find(".content-block")
-		content := block.Find(".content").Text()
-		stats := block.Find(".stats")
-		like := stats.Find(".stats-vote").Find(".number").Text()
-		comment := stats.Find(".stats-comments").Find(".number").Text()
+		action := main.Find(".action")
+		like := action.Find(".ding").Find("em").Text()
+		comment := action.Find(".det-commentClick").Find("em").Text()
 
-		_, fond := block.Find(".thumb").Find("img").Attr("src")
+		_, fond := main.Find(".content-txt").Find("img").Attr("src")
 		if fond {
 			return false, fmt.Errorf("图片暂不保存...")
 		}
@@ -66,8 +65,8 @@ func (q *QiuBai) Process() (bool, error) {
 
 		joke := new(db.Joker)
 		joke.SourceUrl = source_url
-		joke.Title = "糗事百科"
-		joke.Category = cate
+		joke.Title = "捧腹"
+		joke.Category = " "
 		joke.Content = content
 		joke.ReadNum = 0
 		joke.LikeNum, _ = strconv.Atoi(like)
@@ -83,21 +82,21 @@ func (q *QiuBai) Process() (bool, error) {
 	return false, fmt.Errorf("获取内容失败")
 }
 
-func (q *QiuBai) SourceUrl() string {
-	return q.doc.Url.String()
+func (p *PengFu) SourceUrl() string {
+	return p.doc.Url.String()
 }
 
-func (q *QiuBai) Host() string {
-	return q.host
+func (p *PengFu) Host() string {
+	return p.host
 }
 
-func (q *QiuBai) Name() string {
-	return q.name
+func (p *PengFu) Name() string {
+	return p.name
 }
 
-func (q *QiuBai) Close() float64 {
+func (p *PengFu) Close() float64 {
 	now := time.Now()
-	start := q.start
+	start := p.start
 
 	d := now.Sub(start).Nanoseconds()
 
@@ -105,5 +104,5 @@ func (q *QiuBai) Close() float64 {
 }
 
 func init() {
-	Register("qiubai", NewQiuBai)
+	Register("pengfu", NewPengFu)
 }
